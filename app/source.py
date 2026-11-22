@@ -3,6 +3,7 @@ from .config import MAX_BYTES, MAX_ROWS, ROOT, SAMPLES
 from .errors import InputError
 
 KEYS = ('windows', 'passes', 'events')
+EXTRA = ('closures', 'migrations')
 
 
 def sample(name):
@@ -24,7 +25,9 @@ def read(raw):
         raise InputError('BAD_SOURCE') from exc
     if not isinstance(data, dict) or any(not isinstance(data.get(key), list) for key in KEYS):
         raise InputError('BAD_SOURCE')
-    count = sum(len(data[key]) for key in KEYS)
+    if any(not isinstance(data.get(key, []), list) for key in EXTRA):
+        raise InputError('BAD_SOURCE')
+    count = sum(len(data[key]) for key in KEYS) + sum(len(data.get(key, [])) for key in EXTRA)
     if count == 0:
         raise InputError('EMPTY_SOURCE')
     if count > MAX_ROWS:

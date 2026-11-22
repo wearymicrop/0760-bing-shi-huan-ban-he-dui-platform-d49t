@@ -7,8 +7,9 @@
 1. 执行 `docker compose up --build -d`，访问 `http://localhost:18454`。
 2. 首页加载「周末夜场」。点 `0042` 的时段票签，核对午夜前 20 分钟扣旧券、午夜后 10 分钟扣新券，另有 10 分钟自付。
 3. 进入「时券对账」。样例有效预订 340 分钟，扣券 70 分钟、自付 155 分钟、豁免 30 分钟、争议 85 分钟，两项差额均为 0。
-4. 导入文件可使用 `sample_data/clean.json`。也可在工具条选择「例行早场」，其 60 分钟有效占用无争议。
-5. 到「值班归档」复算并下载凭证。相同规则包和输入内容使用原批次号。
+4. 进入「封场迁移」。周末夜场午夜前北冰制冰机报障，23:50–01:30 封场，4 单受影响共 90 分钟：2 单改期南冰、2 单登记待办，逐单对平后封存，可下载迁移单凭证。
+5. 导入文件可使用 `sample_data/clean.json`。也可在工具条选择「例行早场」，其 60 分钟有效占用无争议。
+6. 到「值班归档」复算并下载凭证。相同规则包和输入内容使用原批次号。
 
 | 模块 | 页面 |
 |---|---|
@@ -18,8 +19,9 @@
 | 换班结转 | `/desk/changes` |
 | 有效折抵 | `/desk/debit` |
 | 时券对账 | `/desk/balance` |
+| 封场迁移 | `/desk/migration` |
 | 值班归档 | `/desk/archive` |
 
-`POST /api/runs` 接受 `{"sample":"night"}`、`{"sample":"clean"}` 或 multipart `source`。保存后可通过 `/api/modules/{模块}/{运行号}` 查看各阶段结论。归档与证据格式见 [字段与计算方式](docs/DATA-DICTIONARY.md)。[边界与回归](docs/DEPTH.md) 列出样例触发的冲突。
+`POST /api/runs` 接受 `{"sample":"night"}`、`{"sample":"clean"}` 或 multipart `source`。保存后可通过 `/api/modules/{模块}/{运行号}` 查看各阶段结论。封场与改期写在同一批记录的 `closures`、`migrations` 数组里；迁移单封存后可经 `/api/runs/{运行号}/ticket` 下载正式凭证，未对平或仍重叠时拒绝出具。归档与证据格式见 [字段与计算方式](docs/DATA-DICTIONARY.md)。[边界与回归](docs/DEPTH.md) 列出样例触发的冲突。
 
 时券归档保存在本地 SQLite 命名卷中。`docker compose down` 关闭服务并保留封存记录。以 `docker compose exec -T app pytest -q` 运行回归。

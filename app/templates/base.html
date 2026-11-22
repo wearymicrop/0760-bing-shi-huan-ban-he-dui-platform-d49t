@@ -38,7 +38,7 @@
       <div class="panel-top"><h2>{% block table_title %}登记明细{% endblock %}</h2><label>筛选<input id="filter" type="search" placeholder="编号或场地"></label></div>
       <div class="scrollbox" tabindex="0" aria-label="登记记录">
   <table id="ledger">
-    <thead><tr>{% for key,label in columns.items() %}<th scope="col" {% if key in ['line','booked','debit','cash','waived','disputed','difference','minutes'] %}class="num"{% endif %}>{{ label }}</th>{% endfor %}</tr></thead>
+    <thead><tr>{% for key,label in columns.items() %}<th scope="col" {% if key in ['line','booked','debit','cash','waived','disputed','difference','minutes','affected','moved','pending'] %}class="num"{% endif %}>{{ label }}</th>{% endfor %}</tr></thead>
     <tbody>
       {% for row in view.rows %}
         <tr>

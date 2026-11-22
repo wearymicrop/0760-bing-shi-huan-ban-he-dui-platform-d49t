@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block table_title %}迁移明细{% endblock %}
+{% block feature %}
+<section class="panel proof">
+  <div class="panel-top"><h2>封场迁移单</h2>
+    <b class="badge" id="seal-status">{{ '已封存 · 可交接' if view.sealed else '未对平或仍重叠 · 暂不可封存' }}</b>
+  </div>
+  {% if view.closures %}
+    <div class="index-strip">
+      {% for c in view.closures %}
+        <div class="index">{{ c.rink }}　{{ c.start[5:16]|replace('T',' ') }}–{{ c.end[11:16] }}<b>{{ c.reason }} · {{ c.by }} {{ c.reported[11:16] }} 上报</b></div>
+      {% endfor %}
+    </div>
+  {% else %}<p>本班没有封场记录。</p>{% endif %}
+  {% if view.sealed and view.closures %}
+    <div class="seal-actions"><a class="solid" href="{{ url_for('archive.ticket', run_id=run.id) }}">下载迁移单凭证</a></div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -38,3 +38,19 @@ def export_run(run_id):
     document = bundle | {'original_json': raw.decode('utf-8')}
     return Response(manifest.encode(document), mimetype='application/json',
                     headers={'Content-Disposition': f'attachment; filename="rink-{run_id[:12]}.json"'})
+
+
+@routes.get('/api/runs/<run_id>/ticket')
+def ticket(run_id):
+    _, bundle = service.get(current_app.config['DB_PATH'], run_id)
+    view = bundle['views'].get('migration')
+    if view is None:
+        raise InputError('TICKET_MISSING', 404)
+    if not view['sealed']:
+        raise InputError('TICKET_UNSEALED')
+    document = {'ticket': '封场迁移单', 'run': bundle['id'], 'sealed': True,
+                'version': bundle['manifest']['version'], 'cutoff': bundle['manifest']['cutoff'],
+                'input_sha256': bundle['manifest']['input_sha256'],
+                'closures': view['closures'], 'rows': view['rows'], 'metrics': view['metrics']}
+    return Response(manifest.encode(document), mimetype='application/json',
+                    headers={'Content-Disposition': f'attachment; filename="ticket-{run_id[:12]}.json"'})

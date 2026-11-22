@@ -10,6 +10,11 @@ MESSAGES = {
     'STALE_EVENT': '修订号已被后续事件替代', 'AFTER_CLOSE': '事件晚于结账截点',
     'BAD_CHAIN': '没有完整的新订与改单链', 'COLLISION': '同场冰面时段重叠',
     'CANCELED': '该预订已撤销', 'LIMIT': '权益分钟额用尽',
+    'DUP_CLOSURE': '封场记录重复', 'DUP_MIGRATION': '迁移去向重复',
+    'UNCOVERED': '受影响预订没有去向', 'MISMATCH': '迁移安排与停用分钟不对平',
+    'MOVE_OVERLAP': '新时段仍与封场段或既有占用重叠', 'ORPHAN_MIGRATION': '迁移去向没有对应的受影响预订',
+    'TODO_CONFLICT': '同一预订的待办内容不一致', 'TICKET_MISSING': '该批次没有封场迁移单',
+    'TICKET_UNSEALED': '迁移单未对平或仍重叠，不能出具正式凭证',
 }
 
 
